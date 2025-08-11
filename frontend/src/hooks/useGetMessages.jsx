@@ -14,18 +14,17 @@ const useGetMessages = () => {
                 if (selectedUser?._id) {
                     axios.defaults.withCredentials = true;
                     const res = await axios.get(`${BASE_URL}/api/v1/message/${selectedUser?._id}`);
-                    dispatch(setMessages(res.data || [])); // Empty array if no messages
+                    dispatch(setMessages(res.data || [])); 
                 } else {
                     // Clear messages when no user selected
                     dispatch(setMessages([]));
                 }
             } catch (error) {
                 console.log(error);
-                dispatch(setMessages([])); // Clear messages on error
+                dispatch(setMessages([])); 
             }
         }
         fetchMessages();
-    }, [selectedUser?._id, dispatch]); // Remove setMessages from dependency
-}
+    }, [selectedUser?._id, dispatch]); 
 
 export default useGetMessages
