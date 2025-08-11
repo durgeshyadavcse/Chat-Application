@@ -21,7 +21,7 @@ const useGetRealTimeMessage = () => {
             console.log("👤 Auth User ID:", authUser?._id);
             console.log("📱 Selected User ID:", selectedUser?._id);
             
-            // Check if message belongs to current conversation
+            
             const isMessageForCurrentConversation = 
                 (newMessage.senderId === selectedUser?._id && newMessage.receiverId === authUser?._id) ||
                 (newMessage.senderId === authUser?._id && newMessage.receiverId === selectedUser?._id);
