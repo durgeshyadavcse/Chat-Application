@@ -16,7 +16,7 @@ const useGetMessages = () => {
                     const res = await axios.get(`${BASE_URL}/api/v1/message/${selectedUser?._id}`);
                     dispatch(setMessages(res.data || [])); 
                 } else {
-                    // Clear messages when no user selected
+                    
                     dispatch(setMessages([]));
                 }
             } catch (error) {
