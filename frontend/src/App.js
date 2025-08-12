@@ -14,7 +14,7 @@ import { setOnlineUsers } from './redux/userSlice';
 // export const BASE_URL = "http://localhost:5000";
 
 // Production (deployment URL yaha dalna)
-export const BASE_URL = "https://hat-application-7-xuip.onrender.com";
+export const BASE_URL = "https://chat-application-7-xuip.onrender.com";
 
 const router = createBrowserRouter([
   {
