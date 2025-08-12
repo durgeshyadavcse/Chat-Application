@@ -1,63 +1,71 @@
 import Signup from './components/Signup';
 import './App.css';
-import {createBrowserRouter, RouterProvider} from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import HomePage from './components/HomePage';
 import Login from './components/Login';
-import { useEffect, useState } from 'react';
-import {useSelector,useDispatch} from "react-redux";
+import { useEffect } from 'react';
+import { useSelector, useDispatch } from "react-redux";
 import io from "socket.io-client";
 import { setSocket } from './redux/socketSlice';
 import { setOnlineUsers } from './redux/userSlice';
-import { BASE_URL } from '.';
+
+// ===== Backend ka Base URL =====
+// Local development
+// export const BASE_URL = "http://localhost:5000";
+
+// Production (deployment URL yaha dalna)
+export const BASE_URL = "https://hat-application-7-xuip.onrender.com";
 
 const router = createBrowserRouter([
   {
-    path:"/",
-    element:<HomePage/>
+    path: "/",
+    element: <HomePage />
   },
   {
-    path:"/signup",
-    element:<Signup/>
+    path: "/signup",
+    element: <Signup />
   },
   {
-    path:"/login",
-    element:<Login/>
-  },
+    path: "/login",
+    element: <Login />
+  }
+]);
 
-])
-
-function App() { 
-  const {authUser} = useSelector(store=>store.user);
-  const {socket} = useSelector(store=>store.socket);
+function App() {
+  const { authUser } = useSelector(store => store.user);
+  const { socket } = useSelector(store => store.socket);
   const dispatch = useDispatch();
 
-  useEffect(()=>{
-    if(authUser){
-      const socketio = io(`${BASE_URL}`, {
-          query:{
-            userId:authUser._id
-          }
+  useEffect(() => {
+    if (authUser) {
+      const socketio = io(BASE_URL, {
+        query: {
+          userId: authUser._id
+        },
+        transports: ["websocket"] // direct websocket connection
       });
+
       dispatch(setSocket(socketio));
 
-      socketio?.on('getOnlineUsers', (onlineUsers)=>{
-        dispatch(setOnlineUsers(onlineUsers))
+      socketio?.on('getOnlineUsers', (onlineUsers) => {
+        dispatch(setOnlineUsers(onlineUsers));
       });
-      return () => socketio.close();
-    }else{
-      if(socket){
-        socket.close();
+
+      return () => {
+        socketio.disconnect();
+      };
+    } else {
+      if (socket) {
+        socket.disconnect();
         dispatch(setSocket(null));
       }
     }
-
-  },[authUser]);
+  }, [authUser, dispatch]);
 
   return (
     <div className="p-4 h-screen flex items-center justify-center">
-      <RouterProvider router={router}/>
+      <RouterProvider router={router} />
     </div>
-
   );
 }
 
