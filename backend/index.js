@@ -1,4 +1,4 @@
-import express from "express"; // method-2
+import express from "express";
 import dotenv from "dotenv"; 
 import connectDB from "./config/database.js";
 import userRoute from "./routes/userRoute.js";
@@ -7,32 +7,33 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import { app, server } from "./socket/socket.js";
 
-dotenv.config({});
+dotenv.config();
 
 const PORT = process.env.PORT || 5000;
-app.get('/', (req, res) => {
-  res.send('Server is running');
-});
 
+// CORS config with both localhost and deployed frontend URL
+const corsOptions = {
+  origin: ['http://localhost:3000', 'https://chat-applic.netlify.app'],  // deployed frontend
+  credentials: true,
+};
 
-// middleware
+// middleware (CORS should be top-most)
+app.use(cors(corsOptions));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());
 
-// CORS config with both localhost and deployed frontend URL
-const corsOption = {
-  origin: ['http://localhost:3000', 'https://mern-chat-a.netlify.app'],  // Add your deployed frontend URL here
-  credentials: true,
-};
-
-app.use(cors(corsOption));
+// Test route
+app.get('/', (req, res) => {
+  res.send('Server is running');
+});
 
 // routes
 app.use("/api/v1/user", userRoute);
 app.use("/api/v1/message", messageRoute);
 
+// start server
 server.listen(PORT, () => {
   connectDB();
-  console.log(`Server listen at port ${PORT}`);
+  console.log(`Server listening on port ${PORT}`);
 });
