@@ -20,8 +20,9 @@ export const register = async (req, res) => {
 
        
         // profilePhoto
-        const maleProfilePhoto =' https://avatar.iran.liara.run/public/boy?username=${username}';
-        const femaleProfilePhoto ='https://avatar.iran.liara.run/public/girl?username=${username}';
+       const femaleProfilePhoto = `https://avatar.iran.liara.run/public/girl?username=${username}`;
+       const maleProfilePhoto = `https://avatar.iran.liara.run/public/boy?username=${username}`;
+
         await User.create({
             fullName,
             username,
